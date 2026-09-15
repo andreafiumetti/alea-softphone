@@ -4,6 +4,8 @@ App softphone Android per **ALEA PBX**, basata su [linphone-android](https://git
 
 Il centralino e l’admin UI stanno nel repo separato: [andreafiumetti/alea-pbx](https://github.com/andreafiumetti/alea-pbx).
 
+**Rilascio:** a ogni release prodotto aggiornare questo repo **e** `alea-pbx` (vedi `docs/PIANO-LAVORO.md` nel repo PBX).
+
 ## Cosa include
 
 - Branding ALEA (icone, splash, temi)
