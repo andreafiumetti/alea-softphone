@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Stesso glyph A (bianco) tintabile — drawer + notifiche -->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/alea_mark_white"
+    android:gravity="center"
+    android:tintMode="src_in" />
