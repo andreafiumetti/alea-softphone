@@ -98,7 +98,7 @@
             app:layout_constraintStart_toEndOf="@id/conversations"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Casella vocale (*97) — riusa slot meetings -->
+        <!-- Casella vocale visuale — lista messaggi -->
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
             android:id="@+id/meetings"

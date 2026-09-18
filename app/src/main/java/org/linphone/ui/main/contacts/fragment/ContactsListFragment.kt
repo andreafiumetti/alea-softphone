@@ -91,7 +91,17 @@ class ContactsListFragment : AbstractMainFragment() {
         Log.i("$TAG Swipe to refresh: CardDAV + ALEA directory")
         org.linphone.alea.AleaDirectorySync.syncIfNeeded(requireContext())
         listViewModel.refreshCardDavContacts()
-        binding.contactsListSwipeRefresh.isRefreshing = false
+        binding.contactsListSwipeRefresh.postDelayed({
+            binding.contactsListSwipeRefresh.isRefreshing = false
+            val err = org.linphone.alea.AleaDirectorySync.lastErrorMessage()
+            if (!err.isNullOrBlank()) {
+                android.widget.Toast.makeText(
+                    requireContext(),
+                    getString(R.string.alea_directory_sync_failed_toast) + ": " + err,
+                    android.widget.Toast.LENGTH_LONG
+                ).show()
+            }
+        }, 2500)
     }
 
     override fun onDefaultAccountChanged() {

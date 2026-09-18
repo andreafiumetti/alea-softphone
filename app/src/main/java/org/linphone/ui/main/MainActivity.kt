@@ -483,6 +483,12 @@ class MainActivity : GenericActivity() {
         viewModel.enableAccountMonitoring(true)
         viewModel.updateMissingPermissionAlert()
         viewModel.updateAccountsAndNetworkReachability()
+        org.linphone.LinphoneApplication.Companion.coreContext.postOnCoreThread { core ->
+            org.linphone.alea.AleaSipAccountInstaller.ensureTcpForEnrolledAccounts(
+                this@MainActivity,
+                core
+            )
+        }
         org.linphone.alea.AleaDirectorySync.syncIfNeeded(this)
         presenceRefreshHandler.removeCallbacks(presenceRefreshRunnable)
         presenceRefreshHandler.postDelayed(presenceRefreshRunnable, 30_000L)

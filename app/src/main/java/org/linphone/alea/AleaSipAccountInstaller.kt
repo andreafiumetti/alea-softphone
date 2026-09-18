@@ -11,6 +11,7 @@ import java.util.Locale
 /**
  * Crea/aggiorna Account SIP Linphone da credenziali enroll ALEA.
  * Il re-scan QR deve sempre aggiornare password/host (mai lasciare credenziali stale).
+ * Transport default = TCP (UDP spesso bloccato su 4G / Wi‑Fi esterne).
  */
 object AleaSipAccountInstaller {
     private const val TAG = "[ALEA SIP Install]"
@@ -19,6 +20,46 @@ object AleaSipAccountInstaller {
         data class Ok(val account: Account) : Outcome()
 
         data class Error(val message: String) : Outcome()
+    }
+
+    /** Preferisci TCP; TLS solo se esplicito; UDP solo se l'enroll lo chiede davvero. */
+    fun resolveTransport(raw: String?): TransportType {
+        return when (raw?.trim()?.lowercase(Locale.ROOT).orEmpty()) {
+            "tls", "sips" -> TransportType.Tls
+            "udp" -> TransportType.Udp
+            else -> TransportType.Tcp // tcp, blank, unknown
+        }
+    }
+
+    /**
+     * Migra account ALEA già enrollati da UDP → TCP senza riscan QR.
+     * Chiamare sul core thread all'avvio / onResume.
+     */
+    fun ensureTcpForEnrolledAccounts(context: android.content.Context, core: Core) {
+        if (!AleaEnrollStore.hasSession(context)) return
+        val enrollHost = AleaEnrollStore.sipHost(context).trim().lowercase(Locale.ROOT)
+        val enrollExt = AleaEnrollStore.extension(context).trim()
+        if (enrollHost.isEmpty()) return
+        for (account in core.accountList) {
+            val id = account.params.identityAddress ?: continue
+            val user = id.username ?: continue
+            val domain = (id.domain ?: "").lowercase(Locale.ROOT)
+            if (domain != enrollHost) continue
+            if (enrollExt.isNotEmpty() && !user.equals(enrollExt, ignoreCase = true)) continue
+            val params = account.params.clone() ?: continue
+            val server = params.serverAddress?.clone() ?: run {
+                Factory.instance().createAddress("sip:$enrollHost") ?: return@run null
+            } ?: continue
+            if (server.transport == TransportType.Tcp || server.transport == TransportType.Tls) {
+                continue
+            }
+            server.transport = TransportType.Tcp
+            params.serverAddress = server
+            params.isRegisterEnabled = true
+            account.params = params
+            account.refreshRegister()
+            Log.i("$TAG Migrated ${id.asStringUriOnly()} to TCP (was UDP)")
+        }
     }
 
     fun install(core: Core, enroll: AleaEnrollClient.Result): Outcome {
@@ -37,11 +78,7 @@ object AleaSipAccountInstaller {
             identityAddress.displayName = enroll.displayName.trim()
         }
 
-        val transport = when (enroll.transport.trim().lowercase(Locale.ROOT)) {
-            "tcp" -> TransportType.Tcp
-            "tls" -> TransportType.Tls
-            else -> TransportType.Udp
-        }
+        val transport = resolveTransport(enroll.transport)
         val serverUri = if (enroll.sipPort > 0 && enroll.sipPort != 5060) {
             "sip:$host:${enroll.sipPort}"
         } else {

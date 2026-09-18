@@ -104,6 +104,9 @@ class TransferCallFragment : GenericCallFragment() {
 
         @UiThread
         override fun onLongPress(model: ContactNumberOrAddressModel) {
+            // ALEA: long-press = trasferimento cieco (tap = consultazione)
+            val address = model.address ?: return
+            showConfirmBlindTransferDialog(address, model.name)
         }
     }
 

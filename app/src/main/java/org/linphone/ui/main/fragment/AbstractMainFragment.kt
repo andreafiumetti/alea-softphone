@@ -166,7 +166,9 @@ abstract class AbstractMainFragment : GenericMainFragment() {
 
         viewModel.navigateToVoicemailEvent.observe(viewLifecycleOwner) {
             it.consume {
-                dialVoicemail()
+                if (currentFragmentId != R.id.meetingsListFragment) {
+                    goToMeetingsList()
+                }
             }
         }
 

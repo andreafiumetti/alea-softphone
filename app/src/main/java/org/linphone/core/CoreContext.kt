@@ -551,6 +551,7 @@ class CoreContext
                             "$TAG Digest auth for [${authInfo.username}@${authInfo.domain}] while registration is [$regState] — suppressing password dialog"
                         )
                         digestAuthInfoPendingPasswordUpdate = null
+                        core.abortAuthentication(authInfo)
                         return
                     }
 

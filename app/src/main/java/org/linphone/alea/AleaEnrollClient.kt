@@ -73,7 +73,7 @@ object AleaEnrollClient {
                 sipPassword = json.optString("sip_password"),
                 sipHost = json.optString("sip_host"),
                 sipPort = json.optInt("sip_port", 5060),
-                transport = json.optString("transport", "udp").ifBlank { "udp" },
+                transport = json.optString("transport", "tcp").ifBlank { "tcp" },
                 deviceId = json.optString("device_id"),
                 appToken = json.optString("app_token"),
                 apiBase = json.optString("api_base").ifBlank { base }

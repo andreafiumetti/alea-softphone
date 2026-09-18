@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="org.linphone.alea.voicemail.AleaVoicemailMessageModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="16dp"
+        android:background="@drawable/alea_list_row_background">
+
+        <View
+            android:id="@+id/unread_dot"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/shape_circle_primary_background"
+            android:visibility="@{model.isUnread ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/caller"
+            app:layout_constraintBottom_toBottomOf="@id/caller" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/caller"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{model.callerId}"
+            android:textSize="16sp"
+            android:textColor="?attr/color_main2_900"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/unread_dot"
+            app:layout_constraintEnd_toStartOf="@id/play_pause"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/meta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text='@{model.dateLabel + " · " + model.durationLabel}'
+            android:textSize="13sp"
+            android:textColor="?attr/color_hint_text"
+            android:maxLines="1"
+            app:layout_constraintStart_toStartOf="@id/caller"
+            app:layout_constraintEnd_toEndOf="@id/caller"
+            app:layout_constraintTop_toBottomOf="@id/caller" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/transcript"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@{model.transcript}"
+            android:textSize="13sp"
+            android:textColor="?attr/color_main2_700"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:visibility="@{model.hasTranscript ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/caller"
+            app:layout_constraintEnd_toEndOf="@id/caller"
+            app:layout_constraintTop_toBottomOf="@id/meta" />
+
+        <ImageView
+            android:id="@+id/play_pause"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@{model.isPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
+            android:contentDescription="@string/content_description_play_voicemail"
+            app:tint="?attr/color_main1_500"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -14,7 +14,8 @@ plugins {
     alias(libs.plugins.navigation)
 }
 
-val packageName = "org.linphone"
+// applicationId store-facing; Java/Kotlin namespace resta org.linphone (fork).
+val packageName = "it.aleaconnect.softphone"
 val useDifferentPackageNameForDebugBuild = false
 
 val sdkPath = providers.gradleProperty("LinphoneSdkBuildDir").get()
@@ -106,8 +107,8 @@ android {
         applicationId = packageName
         minSdk = 28
         targetSdk = 37
-        versionCode = 602007 // 6.02.007
-        versionName = "6.2.7"
+        versionCode = 603001 // 6.03.001 — SIP TCP default (mobile / Wi‑Fi esterne)
+        versionName = "6.3.1-alea"
 
         manifestPlaceholders["appAuthRedirectScheme"] = packageName
 

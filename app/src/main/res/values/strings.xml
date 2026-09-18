@@ -6,6 +6,7 @@
 
 <resources>
     <string name="app_name" translatable="false">&appName;</string>
+    <string name="file_provider" translatable="false">it.aleaconnect.softphone.fileprovider</string>
 
     <!-- Not translatable strings -->
     <string name="vertical_separator" translatable="false">|</string>
@@ -13,13 +14,13 @@
     <string name="assistant_web_platform_link" translatable="false">aleaconnect.it</string>
     <string name="assistant_linphone_contact_us_link" translatable="false">aleaconnect.it</string>
 
-    <string name="notification_channel_call_id" translatable="false">linphone_6.0_notification_call_id</string>
-    <string name="notification_channel_incoming_call_id" translatable="false">linphone_6.0_notification_incoming_call_id</string>
-    <string name="notification_channel_missed_call_id" translatable="false">linphone_6.0_notification_missed_call_id</string>
-    <string name="notification_channel_service_id" translatable="false">linphone_6.0_notification_service_id</string>
-    <string name="notification_channel_chat_id" translatable="false">linphone_6.0_notification_chat_id</string>
-    <string name="notification_channel_without_ringtone_incoming_call_id" translatable="false">linphone_6.0.1_notification_incoming_call_id</string>
-    <string name="notification_channel_account_error_id" translatable="false">linphone_6.1_account_error_id</string>
+    <string name="notification_channel_call_id" translatable="false">alea_softphone_notification_call_id</string>
+    <string name="notification_channel_incoming_call_id" translatable="false">alea_softphone_notification_incoming_call_id</string>
+    <string name="notification_channel_missed_call_id" translatable="false">alea_softphone_notification_missed_call_id</string>
+    <string name="notification_channel_service_id" translatable="false">alea_softphone_notification_service_id</string>
+    <string name="notification_channel_chat_id" translatable="false">alea_softphone_notification_chat_id</string>
+    <string name="notification_channel_without_ringtone_incoming_call_id" translatable="false">alea_softphone_notification_incoming_call_id_v2</string>
+    <string name="notification_channel_account_error_id" translatable="false">alea_softphone_account_error_id</string>
 
     <string name="emoji_love" translatable="false">❤️</string>
     <string name="emoji_thumbs_up" translatable="false">👍</string>
@@ -29,18 +30,18 @@
 
     <string name="help_about_open_source_licenses_title" translatable="false">GNU General Public License v3.0</string>
     <string name="help_about_open_source_licenses_subtitle" translatable="false">ALEA Connect</string>
-    <string name="help_advanced_send_debug_logs_email_address" translatable="false">linphone-android@belledonne-communications.com</string>
+    <string name="help_advanced_send_debug_logs_email_address" translatable="false">support@aleaconnect.it</string>
 
     <string name="website_contact_url" translatable="false">https://aleaconnect.it</string>
-    <string name="website_download_url" translatable="false">https://aleaconnect.it</string>
-    <string name="website_user_guide_url" translatable="false">https://aleaconnect.it</string>
-    <string name="website_privacy_policy_url" translatable="false">https://linphone.org/en/privacy-policy</string>
-    <string name="website_terms_and_conditions_url" translatable="false">https://linphone.org/en/terms-of-use</string>
-    <string name="web_platform_register_email_url" translatable="false">https://subscribe.linphone.org/register/email</string>
-    <string name="web_platform_forgotten_password_url" translatable="false">https://subscribe.linphone.org</string>
-    <string name="website_translate_weblate_url" translatable="false">https://weblate.linphone.org/</string>
-    <string name="website_open_source_licences_usage_url" translatable="false">https://wiki.linphone.org/xwiki/wiki/public/view/Linphone/Third%20party%20components%20/#Hlinphone-android</string>
-    <string name="conversation_end_to_end_encrypted_bottom_sheet_link" translatable="false"><u>https://linphone.org/en/features/#security</u></string>
+    <string name="website_download_url" translatable="false">https://www.aleaconnect.it/alea-pbx/</string>
+    <string name="website_user_guide_url" translatable="false">https://www.aleaconnect.it/alea-pbx/</string>
+    <string name="website_privacy_policy_url" translatable="false">https://aleaconnect.it</string>
+    <string name="website_terms_and_conditions_url" translatable="false">https://aleaconnect.it</string>
+    <string name="web_platform_register_email_url" translatable="false">https://aleaconnect.it</string>
+    <string name="web_platform_forgotten_password_url" translatable="false">https://aleaconnect.it</string>
+    <string name="website_translate_weblate_url" translatable="false">https://aleaconnect.it</string>
+    <string name="website_open_source_licences_usage_url" translatable="false">https://aleaconnect.it</string>
+    <string name="conversation_end_to_end_encrypted_bottom_sheet_link" translatable="false"><u>https://aleaconnect.it</u></string>
 
     <string name="conversation_one_to_one_hidden_subject" translatable="false">Dummy subject</string>
 
@@ -183,8 +184,9 @@
     <string name="assistant_account_register_unexpected_error">Unexpected error occurred, please try again later</string>
     <string name="assistant_account_login_forbidden_error">Wrong username or password</string>
     <string name="assistant_account_login_error">Failed to login: error code is %s</string>
-    <string name="alea_enroll_success_toast">ALEA account registered</string>
-    <string name="alea_enroll_failed_toast">ALEA enroll failed — check QR / network</string>
+    <string name="alea_enroll_success_toast">Account ALEA registrato</string>
+    <string name="alea_enroll_failed_toast">Enroll ALEA fallito — controlla QR / rete</string>
+    <string name="alea_directory_sync_failed_toast">Sync rubrica ALEA fallita</string>
     <string name="assistant_permissions_title">Grant permissions</string>
     <string name="assistant_permissions_grant_all_of_them">OK</string>
     <string name="assistant_permissions_skip_permissions">Do it later</string>
@@ -205,7 +207,7 @@
     <string name="bottom_navigation_contacts_label">Contacts</string>
     <string name="bottom_navigation_calls_label">Recents</string>
     <string name="bottom_navigation_conversations_label">Chat</string>
-    <string name="bottom_navigation_meetings_label">Voicemail</string>
+    <string name="bottom_navigation_meetings_label">Casella</string>
 
     <!-- Side menu -->
     <string name="drawer_menu_manage_account">Manage the profile</string>
@@ -1049,6 +1051,11 @@
     <string name="content_description_copy_text_to_clipboard">Copy text to clipboard</string>
     <string name="content_description_voicemail_available">Voice message are available</string>
     <string name="content_description_call_voicemail">Long press to dial voicemail</string>
+    <string name="content_description_play_voicemail">Play voicemail message</string>
+    <string name="content_description_refresh_voicemail">Refresh voicemail list</string>
+    <string name="alea_voicemail_empty">No recorded messages</string>
+    <string name="alea_voicemail_no_session">Enroll ALEA (QR) per vedere i messaggi</string>
+    <string name="alea_voicemail_delete_message">Delete this recorded message?</string>
     <string name="content_description_cancel_files_or_text_pending_sharing">Click to cancel files or text pending sharing</string>
     <string name="content_description_close_drawer_menu">Closes menu</string>
 

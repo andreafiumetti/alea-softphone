@@ -34,9 +34,10 @@ host=
 port=443
 
 [misc]
-log_collection_upload_server_url=https://files.linphone.org/http-file-transfer-server/hft.php
-file_transfer_server_url=https://files.linphone.org/http-file-transfer-server/hft.php
-version_check_url_root=https://download.linphone.org/releases
+# ALEA: no upload/check verso cloud Linphone
+log_collection_upload_server_url=
+file_transfer_server_url=
+version_check_url_root=
 max_calls=10
 history_max_size=100
 conference_layout=1
@@ -58,11 +59,11 @@ disable_meetings_feature=1
 dark_mode=0
 dark_mode_allowed=0
 contacts_filter=
-# ALEA lab: prefer QR enroll; hide Linphone cloud account creation
+# ALEA: solo enroll QR / SIP; niente account cloud Linphone
 assistant_hide_create_account=1
 assistant_third_party_sip_account_transport=udp
 
 [account_creator]
-url=https://subscribe.linphone.org/api/
+url=
 
 ## End of default rc

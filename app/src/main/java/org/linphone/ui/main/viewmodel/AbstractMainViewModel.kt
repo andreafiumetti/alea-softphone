@@ -288,7 +288,8 @@ open class AbstractMainViewModel
 
     @UiThread
     fun navigateToVoicemail() {
-        navigateToVoicemailEvent.value = Event(true)
+        // ALEA: Casella = lista messaggi registrati (non chiamata *97)
+        navigateToMeetingsEvent.value = Event(true)
     }
 
     @UiThread
