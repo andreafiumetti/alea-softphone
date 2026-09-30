@@ -767,6 +767,12 @@
     <string name="notification_file_transfer_title">&appName;</string>
     <string name="notification_file_transfer_startup_message">Trasferimento file in corso</string>
     <string name="notification_keep_app_alive_message">Tocca per aprire</string>
+    <string name="notification_keep_app_alive_status_registered">Registrato</string>
+    <string name="notification_keep_app_alive_status_not_registered">Non registrato</string>
+    <string name="notification_keep_app_alive_status_connecting">Connessione in corso…</string>
+    <string name="notification_keep_app_alive_status_error">Registrazione fallita</string>
+    <string name="notification_keep_app_alive_status_disabled">Account disattivato</string>
+    <string name="notification_keep_app_alive_status_no_account">Nessun account</string>
     <string name="notification_enable_speaker_for_call">Attiva l\'altoparlante</string>
     <string name="settings_developer_enabled_toast">Impostazioni per sviluppatori abilitate</string>
     <string name="conversation_text_field_hint">Scrivi un messaggio"¦</string>

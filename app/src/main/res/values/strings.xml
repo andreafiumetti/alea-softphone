@@ -116,6 +116,12 @@
     <string name="notification_file_transfer_upload_download_message" translatable="false">%s, %s</string>
     <string name="notification_keep_app_alive_message">Click to open</string>
     <string name="notification_keep_app_alive_description">This notification keeps app alive while in background</string>
+    <string name="notification_keep_app_alive_status_registered">Registered</string>
+    <string name="notification_keep_app_alive_status_not_registered">Not registered</string>
+    <string name="notification_keep_app_alive_status_connecting">Connecting…</string>
+    <string name="notification_keep_app_alive_status_error">Registration failed</string>
+    <string name="notification_keep_app_alive_status_disabled">Account disabled</string>
+    <string name="notification_keep_app_alive_status_no_account">No account</string>
     <string name="notification_enable_speaker_for_call">Turn on speaker</string>
     <string name="notification_disable_speaker_for_call">Turn off speaker</string>
     <string name="notification_account_registration_error_title">Account %s registration failed!</string>

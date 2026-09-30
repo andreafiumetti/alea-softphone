@@ -468,6 +468,7 @@ class NotificationsManager
             state: RegistrationState?,
             message: String
         ) {
+            updateKeepAliveServiceNotification()
             if (state == RegistrationState.Failed) {
                 showAccountErrorNotification(account)
             } else if (state == RegistrationState.Ok) {
@@ -1867,6 +1868,83 @@ class NotificationsManager
                 .build()
     }
 
+    @AnyThread
+    private fun getKeepAliveRegistrationStatusText(): String {
+        val account = try {
+            coreContext.core.defaultAccount ?: coreContext.core.accountList.firstOrNull()
+        } catch (e: Exception) {
+            Log.w("$TAG Can't read account registration for keep-alive notification: $e")
+            null
+        }
+        if (account == null) {
+            return AppUtils.getString(R.string.notification_keep_app_alive_status_no_account)
+        }
+        val state = if (account.state == RegistrationState.None && !account.params.isRegisterEnabled) {
+            RegistrationState.Cleared
+        } else {
+            account.state
+        }
+        return when (state) {
+            RegistrationState.Ok -> AppUtils.getString(
+                R.string.notification_keep_app_alive_status_registered
+            )
+            RegistrationState.Failed -> AppUtils.getString(
+                R.string.notification_keep_app_alive_status_error
+            )
+            RegistrationState.Progress, RegistrationState.Refreshing -> AppUtils.getString(
+                R.string.notification_keep_app_alive_status_connecting
+            )
+            RegistrationState.Cleared -> AppUtils.getString(
+                R.string.notification_keep_app_alive_status_disabled
+            )
+            else -> AppUtils.getString(R.string.notification_keep_app_alive_status_not_registered)
+        }
+    }
+
+    @AnyThread
+    private fun buildKeepAliveNotification(): Notification {
+        val channelId = context.getString(R.string.notification_channel_service_id)
+        val pendingIntent = TaskStackBuilder.create(context).run {
+            addNextIntentWithParentStack(
+                Intent(context, MainActivity::class.java).apply {
+                    action = Intent.ACTION_MAIN // Needed as well
+                }
+            )
+            getPendingIntent(
+                KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )!!
+        }
+
+        return NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.linphone_notification)
+            .setContentTitle(AppUtils.getString(R.string.app_name))
+            .setContentText(getKeepAliveRegistrationStatusText())
+            .setSubText(AppUtils.getString(R.string.notification_keep_app_alive_message))
+            .setAutoCancel(false)
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setShowWhen(false)
+            .setContentIntent(pendingIntent)
+            .setDeleteIntent(getForegroundServiceDismissedIntent())
+            .build()
+    }
+
+    @WorkerThread
+    private fun updateKeepAliveServiceNotification() {
+        if (currentKeepAliveThirdPartyAccountsForegroundServiceNotificationId == -1) {
+            return
+        }
+        val notification = buildKeepAliveNotification()
+        Log.i(
+            "$TAG Updating keep alive notification with registration status [${getKeepAliveRegistrationStatusText()}]"
+        )
+        notify(KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID, notification)
+    }
+
     @MainThread
     private fun startKeepAliveServiceForeground() {
         Log.i(
@@ -1885,31 +1963,7 @@ class NotificationsManager
 
         val service = keepAliveService
         if (service != null) {
-            val pendingIntent = TaskStackBuilder.create(context).run {
-                addNextIntentWithParentStack(
-                    Intent(context, MainActivity::class.java).apply {
-                        action = Intent.ACTION_MAIN // Needed as well
-                    }
-                )
-                getPendingIntent(
-                    KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )!!
-            }
-
-            val builder = NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.drawable.linphone_notification)
-                .setContentText(AppUtils.getString(R.string.notification_keep_app_alive_description))
-                .setSubText(AppUtils.getString(R.string.notification_keep_app_alive_message))
-                .setAutoCancel(false)
-                .setOngoing(true)
-                .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setShowWhen(false)
-                .setContentIntent(pendingIntent)
-                .setDeleteIntent(getForegroundServiceDismissedIntent())
-            val notification = builder.build()
+            val notification = buildKeepAliveNotification()
 
             Log.i(
                 "$TAG Keep alive for third party accounts Service found, starting it as foreground using notification ID [$KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID] with type [SPECIAL_USE]"
