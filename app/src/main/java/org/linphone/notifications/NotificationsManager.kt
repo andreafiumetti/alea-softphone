@@ -468,11 +468,11 @@ class NotificationsManager
             state: RegistrationState?,
             message: String
         ) {
+            // Keep-alive persistent notification already shows Registrato / Non registrato.
+            // A separate Failed alert would spam on flaky signal (register/deregister loops).
             updateKeepAliveServiceNotification()
-            if (state == RegistrationState.Failed) {
-                showAccountErrorNotification(account)
-            } else if (state == RegistrationState.Ok) {
-                // Check if a notification exists for that identity address and if yes, remove it
+            if (state == RegistrationState.Ok) {
+                // Clear leftover error notifications from older builds, if any
                 val identity = account.params.identityAddress?.asStringUriOnly().orEmpty()
                 val notificationId = accountsErrorNotificationsMap.getOrDefault(identity, -1)
                 if (notificationId != -1) {

@@ -107,8 +107,8 @@ android {
         applicationId = packageName
         minSdk = 28
         targetSdk = 37
-        versionCode = 603001 // 6.03.001 — SIP TCP default (mobile / Wi‑Fi esterne)
-        versionName = "6.3.1-alea"
+        versionCode = 603004 // 6.03.004 — no spam registration-error notification
+        versionName = "6.3.4-alea"
 
         manifestPlaceholders["appAuthRedirectScheme"] = packageName
 
