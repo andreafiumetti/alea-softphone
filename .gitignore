@@ -20,3 +20,14 @@ dist/
 *.log
 local.properties
 .DS_Store
+
+# ALEA: never commit live FCM configs
+app/google-services.json
+*.keystore
+bc-android.keystore
+keystore.properties
+!keystore.properties.example
+
+
+app/google-services.json.linphone-disabled
+

@@ -28,19 +28,46 @@
     <string name="emoji_surprised" translatable="false">😮</string>
     <string name="emoji_tear" translatable="false">😢</string>
 
+    <string name="alea_chat_groups_title" translatable="false">Gruppi ALEA</string>
+    <string name="alea_chat_conversations_section" translatable="false">Conversazioni</string>
+    <string name="alea_chat_groups_empty" translatable="false">Nessun gruppo. Tocca + per crearne uno.</string>
+    <string name="alea_chat_delete_group" translatable="false">Elimina gruppo</string>
+    <string name="alea_chat_leave_group" translatable="false">Esci dal gruppo</string>
+    <string name="alea_chat_delete_group_confirm" translatable="false">Eliminare il gruppo \"%1$s\"? I messaggi spariranno per tutti i membri.</string>
+    <string name="alea_chat_leave_group_confirm" translatable="false">Uscire dal gruppo \"%1$s\"?</string>
+    <string name="alea_chat_long_press_hint" translatable="false">Tieni premuto per eliminare</string>
+    <string name="alea_chat_need_enroll" translatable="false">Enroll softphone richiesto</string>
+    <string name="alea_chat_back" translatable="false">Indietro</string>
+    <string name="alea_chat_refresh" translatable="false">Aggiorna</string>
+    <string name="alea_chat_create" translatable="false">Crea gruppo</string>
+    <string name="alea_chat_create_title" translatable="false">Nuovo gruppo</string>
+    <string name="alea_chat_group_name_hint" translatable="false">Nome gruppo</string>
+    <string name="alea_chat_pick_members" translatable="false">Seleziona interni</string>
+    <string name="alea_chat_group_meta" translatable="false">%1$d membri</string>
+    <string name="alea_chat_message_hint" translatable="false">Messaggio</string>
+    <string name="alea_chat_send" translatable="false">Invia</string>
+    <string name="alea_chat_attach" translatable="false">Allega file</string>
+    <string name="alea_chat_open_file" translatable="false">Apri file</string>
+    <string name="alea_chat_attachment_expired" translatable="false">Allegato non più disponibile sul centralino (scaduto). Se già scaricato, è solo sul telefono.</string>
+    <string name="alea_chat_use_alea_groups" translatable="false">Usa Gruppi ALEA dalla chat (non Flexisip)</string>
+
     <string name="help_about_open_source_licenses_title" translatable="false">GNU General Public License v3.0</string>
-    <string name="help_about_open_source_licenses_subtitle" translatable="false">ALEA Connect</string>
+    <!-- Belledonne GPLv3 Art.7: name original publisher + original app name "Linphone" -->
+    <string name="help_about_open_source_licenses_subtitle" translatable="false">Based on Linphone by Belledonne Communications</string>
+    <string name="help_about_source_code_title" translatable="false">Source code</string>
+    <string name="help_about_source_code_subtitle" translatable="false">ALEA Softphone GPLv3 sources (GitHub)</string>
     <string name="help_advanced_send_debug_logs_email_address" translatable="false">support@aleaconnect.it</string>
 
     <string name="website_contact_url" translatable="false">https://aleaconnect.it</string>
     <string name="website_download_url" translatable="false">https://www.aleaconnect.it/alea-pbx/</string>
     <string name="website_user_guide_url" translatable="false">https://www.aleaconnect.it/alea-pbx/</string>
-    <string name="website_privacy_policy_url" translatable="false">https://aleaconnect.it</string>
-    <string name="website_terms_and_conditions_url" translatable="false">https://aleaconnect.it</string>
+    <string name="website_privacy_policy_url" translatable="false">https://www.aleaconnect.it/alea-pbx/privacy-softphone.php</string>
+    <string name="website_terms_and_conditions_url" translatable="false">https://www.aleaconnect.it/alea-pbx/privacy-softphone.php</string>
     <string name="web_platform_register_email_url" translatable="false">https://aleaconnect.it</string>
     <string name="web_platform_forgotten_password_url" translatable="false">https://aleaconnect.it</string>
     <string name="website_translate_weblate_url" translatable="false">https://aleaconnect.it</string>
-    <string name="website_open_source_licences_usage_url" translatable="false">https://aleaconnect.it</string>
+    <string name="website_open_source_licences_usage_url" translatable="false">https://github.com/andreafiumetti/alea-softphone</string>
+    <string name="website_source_code_url" translatable="false">https://github.com/andreafiumetti/alea-softphone</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_link" translatable="false"><u>https://aleaconnect.it</u></string>
 
     <string name="conversation_one_to_one_hidden_subject" translatable="false">Dummy subject</string>

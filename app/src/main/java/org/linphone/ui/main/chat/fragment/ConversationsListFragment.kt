@@ -224,6 +224,7 @@ class ConversationsListFragment : AbstractMainFragment() {
         }
 
         binding.setOnNewConversationClicked {
+            // FAB = nuova conversazione 1-1. I gruppi ALEA stanno nella sezione dedicata sopra.
             if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
                 Log.i("$TAG Navigating to start conversation fragment")
                 val action =
@@ -231,6 +232,8 @@ class ConversationsListFragment : AbstractMainFragment() {
                 findNavController().navigate(action)
             }
         }
+
+        setupAleaGroupsSection()
 
         listViewModel.conversations.observe(viewLifecycleOwner) {
             adapter.submitList(it)
@@ -403,6 +406,8 @@ class ConversationsListFragment : AbstractMainFragment() {
             Log.i("$TAG Keep app alive setting is enabled, refreshing view just in case")
             listViewModel.filter()
         }
+
+        refreshAleaGroups()
     }
 
     override fun onPause() {
@@ -482,5 +487,122 @@ class ConversationsListFragment : AbstractMainFragment() {
         }
 
         dialog.show()
+    }
+
+    private val aleaGroups = ArrayList<org.linphone.alea.chat.AleaChatClient.Group>()
+    private var aleaGroupsAdapter: AleaGroupsInlineAdapter? = null
+
+    private fun setupAleaGroupsSection() {
+        val section = binding.root.findViewById<View>(R.id.alea_groups_section) ?: return
+        val list = binding.root.findViewById<RecyclerView>(R.id.alea_groups_list) ?: return
+        val empty = binding.root.findViewById<android.widget.TextView>(R.id.alea_groups_empty)
+        val createBtn = binding.root.findViewById<View>(R.id.alea_groups_create)
+
+        if (!org.linphone.alea.AleaEnrollStore.hasSession(requireContext())) {
+            section.visibility = View.GONE
+            return
+        }
+        section.visibility = View.VISIBLE
+        createBtn?.setOnClickListener {
+            org.linphone.alea.chat.AleaChatActivity.openCreate(requireContext())
+        }
+        if (aleaGroupsAdapter == null) {
+            aleaGroupsAdapter = AleaGroupsInlineAdapter(
+                aleaGroups,
+                onOpen = { g ->
+                    org.linphone.alea.chat.AleaChatActivity.openThread(requireContext(), g.id, g.name)
+                },
+                onDelete = { g -> confirmDeleteAleaGroup(g) }
+            )
+            list.layoutManager = LinearLayoutManager(requireContext())
+            list.adapter = aleaGroupsAdapter
+            list.isNestedScrollingEnabled = false
+        }
+        refreshAleaGroups()
+    }
+
+    private fun refreshAleaGroups() {
+        val section = binding.root.findViewById<View>(R.id.alea_groups_section) ?: return
+        val empty = binding.root.findViewById<android.widget.TextView>(R.id.alea_groups_empty)
+        val session = org.linphone.alea.AleaEnrollStore.currentSession(requireContext())
+        if (session == null) {
+            section.visibility = View.GONE
+            return
+        }
+        section.visibility = View.VISIBLE
+        kotlin.concurrent.thread(name = "alea-groups-inline", isDaemon = true) {
+            try {
+                val groups = org.linphone.alea.chat.AleaChatClient.listGroups(session.apiBase, session.appToken)
+                activity?.runOnUiThread {
+                    if (!isAdded) return@runOnUiThread
+                    aleaGroups.clear()
+                    aleaGroups.addAll(groups)
+                    aleaGroupsAdapter?.notifyDataSetChanged()
+                    empty?.visibility = if (groups.isEmpty()) View.VISIBLE else View.GONE
+                }
+            } catch (e: Exception) {
+                Log.w("$TAG ALEA groups refresh failed: ${e.message}")
+            }
+        }
+    }
+
+    private fun confirmDeleteAleaGroup(group: org.linphone.alea.chat.AleaChatClient.Group) {
+        val session = org.linphone.alea.AleaEnrollStore.currentSession(requireContext()) ?: return
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle(R.string.alea_chat_delete_group)
+            .setMessage(getString(R.string.alea_chat_delete_group_confirm, group.name))
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.alea_chat_delete_group) { _, _ ->
+                kotlin.concurrent.thread(name = "alea-group-del", isDaemon = true) {
+                    try {
+                        org.linphone.alea.chat.AleaChatClient.deleteOrLeaveGroup(
+                            session.apiBase,
+                            session.appToken,
+                            group.id
+                        )
+                        activity?.runOnUiThread { refreshAleaGroups() }
+                    } catch (e: Exception) {
+                        activity?.runOnUiThread {
+                            android.widget.Toast.makeText(
+                                requireContext(),
+                                e.message ?: "Errore",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
+            .show()
+    }
+
+    private class AleaGroupsInlineAdapter(
+        private val data: List<org.linphone.alea.chat.AleaChatClient.Group>,
+        private val onOpen: (org.linphone.alea.chat.AleaChatClient.Group) -> Unit,
+        private val onDelete: (org.linphone.alea.chat.AleaChatClient.Group) -> Unit
+    ) : RecyclerView.Adapter<AleaGroupsInlineAdapter.VH>() {
+        class VH(v: View) : RecyclerView.ViewHolder(v) {
+            val name: android.widget.TextView = v.findViewById(R.id.group_name)
+            val meta: android.widget.TextView = v.findViewById(R.id.group_meta)
+            val delete: View = v.findViewById(R.id.btn_delete_group)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+            val v = LayoutInflater.from(parent.context)
+                .inflate(R.layout.alea_chat_group_row, parent, false)
+            return VH(v)
+        }
+
+        override fun getItemCount() = data.size
+
+        override fun onBindViewHolder(holder: VH, position: Int) {
+            val g = data[position]
+            holder.name.text = g.name
+            holder.meta.text = holder.itemView.context.getString(
+                R.string.alea_chat_group_meta,
+                g.memberCount
+            )
+            holder.itemView.setOnClickListener { onOpen(g) }
+            holder.delete.setOnClickListener { onDelete(g) }
+        }
     }
 }

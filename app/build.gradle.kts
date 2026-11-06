@@ -107,8 +107,8 @@ android {
         applicationId = packageName
         minSdk = 28
         targetSdk = 37
-        versionCode = 603004 // 6.03.004 — no spam registration-error notification
-        versionName = "6.3.4-alea"
+        versionCode = 603007 // 6.03.007 — groups section in Conversations + delete
+        versionName = "6.3.7-alea"
 
         manifestPlaceholders["appAuthRedirectScheme"] = packageName
 
