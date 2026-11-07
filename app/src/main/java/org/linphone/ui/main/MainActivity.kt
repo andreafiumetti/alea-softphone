@@ -490,6 +490,7 @@ class MainActivity : GenericActivity() {
             )
         }
         org.linphone.alea.AleaDirectorySync.syncIfNeeded(this)
+        org.linphone.alea.AleaPushRegistrar.registerAsync(this)
         presenceRefreshHandler.removeCallbacks(presenceRefreshRunnable)
         presenceRefreshHandler.postDelayed(presenceRefreshRunnable, 30_000L)
     }
@@ -871,6 +872,7 @@ class MainActivity : GenericActivity() {
                         is org.linphone.alea.AleaSipAccountInstaller.Outcome.Ok -> {
                             Log.i("$TAG ALEA enroll OK from deep link")
                             org.linphone.alea.AleaDirectorySync.syncIfNeeded(applicationContext)
+                            org.linphone.alea.AleaPushRegistrar.registerAsync(applicationContext)
                             runOnUiThread {
                                 android.widget.Toast.makeText(
                                     this,

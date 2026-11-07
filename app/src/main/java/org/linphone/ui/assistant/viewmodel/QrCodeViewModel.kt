@@ -149,6 +149,7 @@ class QrCodeViewModel
                         is AleaSipAccountInstaller.Outcome.Ok -> {
                             Log.i("$TAG ALEA account ready, leaving assistant")
                             org.linphone.alea.AleaDirectorySync.syncIfNeeded(coreContext.context)
+                            org.linphone.alea.AleaPushRegistrar.registerAsync(coreContext.context)
                             showGreenToast(
                                 R.string.alea_enroll_success_toast,
                                 R.drawable.check

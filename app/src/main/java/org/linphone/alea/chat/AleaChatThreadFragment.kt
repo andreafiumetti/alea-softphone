@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
@@ -11,22 +13,37 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.alea.AleaEnrollStore
+import org.linphone.ui.GenericFragment
+import org.linphone.ui.main.viewmodel.SharedMainViewModel
+import org.linphone.utils.Event
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.concurrent.thread
 
-class AleaChatThreadFragment : Fragment() {
+/** ALEA group thread — opens in the chat sliding pane like SIP 1:1 conversations. */
+class AleaChatThreadFragment : GenericFragment() {
     private var groupId: String = ""
     private var groupName: String = ""
     private val messages = ArrayList<AleaChatClient.Message>()
     private lateinit var adapter: MsgAdapter
     private lateinit var list: RecyclerView
+    private var sharedViewModel: SharedMainViewModel? = null
+    private val pollHandler = Handler(Looper.getMainLooper())
+    private val pollRunnable = object : Runnable {
+        override fun run() {
+            if (!isAdded) return
+            refresh(silent = true)
+            pollHandler.postDelayed(this, 4_000L)
+        }
+    }
 
     private val pickFile = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
@@ -34,10 +51,19 @@ class AleaChatThreadFragment : Fragment() {
         sendFile(uri)
     }
 
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            closeThread()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        groupId = arguments?.getString(ARG_ID).orEmpty()
-        groupName = arguments?.getString(ARG_NAME).orEmpty()
+        val args = arguments
+        groupId = args?.getString("groupId")?.ifBlank { null }
+            ?: args?.getString(ARG_ID).orEmpty()
+        groupName = args?.getString("groupName")?.ifBlank { null }
+            ?: args?.getString(ARG_NAME).orEmpty()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -46,10 +72,15 @@ class AleaChatThreadFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<TextView>(R.id.thread_title).text = groupName
-        view.findViewById<View>(R.id.btn_back).setOnClickListener {
-            if (!parentFragmentManager.popBackStackImmediate()) activity?.finish()
+        sharedViewModel = try {
+            ViewModelProvider(requireActivity())[SharedMainViewModel::class.java]
+        } catch (_: Exception) {
+            null
         }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+
+        view.findViewById<TextView>(R.id.thread_title).text = groupName
+        view.findViewById<View>(R.id.btn_back).setOnClickListener { closeThread() }
         list = view.findViewById(R.id.messages_list)
         adapter = MsgAdapter(messages) { att -> downloadAttachment(att) }
         list.layoutManager = LinearLayoutManager(requireContext()).apply { stackFromEnd = true }
@@ -69,7 +100,38 @@ class AleaChatThreadFragment : Fragment() {
             }
             pickFile.launch(Intent.createChooser(intent, getString(R.string.alea_chat_attach)))
         }
-        refresh()
+        sharedViewModel?.openSlidingPaneEvent?.postValue(Event(true))
+        refresh(silent = false)
+    }
+
+    private fun closeThread() {
+        sharedViewModel?.closeSlidingPaneEvent?.value = Event(true)
+        val nav = try {
+            findNavController()
+        } catch (_: Exception) {
+            null
+        }
+        if (nav != null && nav.currentDestination?.id == R.id.aleaChatThreadFragment) {
+            try {
+                nav.navigate(R.id.action_aleaChatThreadFragment_to_emptyFragment)
+                return
+            } catch (_: Exception) {
+                if (nav.popBackStack()) return
+            }
+        }
+        if (parentFragmentManager.popBackStackImmediate()) return
+        activity?.finish()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        pollHandler.removeCallbacks(pollRunnable)
+        pollHandler.postDelayed(pollRunnable, 4_000L)
+    }
+
+    override fun onPause() {
+        pollHandler.removeCallbacks(pollRunnable)
+        super.onPause()
     }
 
     private fun sessionOrToast(): AleaEnrollStore.Session? {
@@ -80,20 +142,30 @@ class AleaChatThreadFragment : Fragment() {
         return s
     }
 
-    private fun refresh() {
-        val session = sessionOrToast() ?: return
+    private fun refresh(silent: Boolean = false) {
+        val session = if (silent) {
+            AleaEnrollStore.currentSession(requireContext()) ?: return
+        } else {
+            sessionOrToast() ?: return
+        }
         thread(name = "alea-chat-msgs", isDaemon = true) {
             try {
                 val msgs = AleaChatClient.listMessages(session.apiBase, session.appToken, groupId)
                 activity?.runOnUiThread {
+                    if (!isAdded) return@runOnUiThread
+                    val prevLast = messages.lastOrNull()?.id
+                    val newLast = msgs.lastOrNull()?.id
+                    val grew = msgs.size > messages.size || (newLast != null && newLast != prevLast)
                     messages.clear()
                     messages.addAll(msgs)
                     adapter.notifyDataSetChanged()
-                    if (messages.isNotEmpty()) list.scrollToPosition(messages.size - 1)
+                    if (grew && messages.isNotEmpty()) list.scrollToPosition(messages.size - 1)
                 }
             } catch (e: Exception) {
-                activity?.runOnUiThread {
-                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                if (!silent) {
+                    activity?.runOnUiThread {
+                        Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -230,6 +302,8 @@ class AleaChatThreadFragment : Fragment() {
 
         fun newInstance(groupId: String, name: String) = AleaChatThreadFragment().apply {
             arguments = Bundle().apply {
+                putString("groupId", groupId)
+                putString("groupName", name)
                 putString(ARG_ID, groupId)
                 putString(ARG_NAME, name)
             }

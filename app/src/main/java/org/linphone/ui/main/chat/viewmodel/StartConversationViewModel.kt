@@ -95,67 +95,10 @@ class StartConversationViewModel
 
     @UiThread
     fun createGroupChatRoom() {
-        coreContext.postOnCoreThread { core ->
-            val account = core.defaultAccount
-            if (account == null) {
-                Log.e(
-                    "$TAG No default account found, can't create group conversation!"
-                )
-                return@postOnCoreThread
-            }
-
-            operationInProgress.postValue(true)
-
-            val groupChatRoomSubject = subject.value.orEmpty()
-            val params = coreContext.core.createConferenceParams(null)
-            params.isChatEnabled = true
-            params.isGroupEnabled = true
-            params.subject = groupChatRoomSubject
-            if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
-                params.securityLevel = Conference.SecurityLevel.EndToEnd
-            } else {
-                params.securityLevel = Conference.SecurityLevel.None
-            }
-            params.account = account
-
-            val chatParams = params.chatParams ?: return@postOnCoreThread
-            chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
-            chatParams.backend = ChatRoom.Backend.FlexisipChat
-
-            val participants = arrayListOf<Address>()
-            for (participant in selection.value.orEmpty()) {
-                participants.add(participant.address)
-            }
-
-            val participantsArray = arrayOf<Address>()
-            val chatRoom = core.createChatRoom(params, participants.toArray(participantsArray))
-            if (chatRoom != null) {
-                if (chatParams.backend == ChatRoom.Backend.FlexisipChat) {
-                    if (chatRoom.state == ChatRoom.State.Created) {
-                        val id = LinphoneUtils.getConversationId(chatRoom)
-                        Log.i(
-                            "$TAG Group conversation [$id] ($groupChatRoomSubject) has been created"
-                        )
-                        operationInProgress.postValue(false)
-                        chatRoomCreatedEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
-                    } else {
-                        Log.i(
-                            "$TAG Conversation [$groupChatRoomSubject] isn't in Created state yet, wait for it"
-                        )
-                        chatRoom.addListener(chatRoomListener)
-                    }
-                } else {
-                    val id = LinphoneUtils.getConversationId(chatRoom)
-                    Log.i("$TAG Conversation successfully created [$id] ($groupChatRoomSubject)")
-                    operationInProgress.postValue(false)
-                    chatRoomCreatedEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
-                }
-            } else {
-                Log.e("$TAG Failed to create group conversation [$groupChatRoomSubject]!")
-                operationInProgress.postValue(false)
-                showRedToast(R.string.conversation_failed_to_create_toast, R.drawable.warning_circle)
-            }
-        }
+        // ALEA: Flexisip group chat is disabled — open PBX API groups UI.
+        Log.w("$TAG Flexisip group chat disabled; opening ALEA groups")
+        val ctx = org.linphone.LinphoneApplication.coreContext.context
+        org.linphone.alea.chat.AleaChatActivity.openCreate(ctx)
     }
 
     @WorkerThread
@@ -253,9 +196,7 @@ class StartConversationViewModel
 
     @UiThread
     fun updateGroupChatButtonVisibility() {
-        coreContext.postOnCoreThread { core ->
-            val hideGroupChat = !LinphoneUtils.isGroupChatAvailable(core)
-            hideGroupChatButton.postValue(hideGroupChat)
-        }
+        // ALEA: never expose Linphone/Flexisip group creation
+        hideGroupChatButton.postValue(true)
     }
 }

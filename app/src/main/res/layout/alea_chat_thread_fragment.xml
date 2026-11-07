@@ -1,44 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/alea_launcher_bg">
+    android:background="?attr/color_background_contrast_in_dark_mode">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/top_bar_height"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="12dp">
+        android:paddingHorizontal="4dp">
 
         <ImageButton
             android:id="@+id/btn_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            style="@style/icon_top_bar_button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/alea_chat_back"
-            android:src="@drawable/caret_left" />
+            android:src="@drawable/caret_left"
+            app:tint="?attr/color_main1_500" />
 
         <TextView
             android:id="@+id/thread_title"
+            style="@style/default_text_style_800"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textColor="?attr/color_main2_600"
+            android:textSize="18sp" />
 
         <ImageButton
             android:id="@+id/btn_attach"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            style="@style/icon_top_bar_button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/alea_chat_attach"
-            android:src="@drawable/paperclip" />
+            android:src="@drawable/paperclip"
+            app:tint="?attr/color_main1_500" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/color_main2_200" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages_list"
@@ -46,31 +56,41 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:padding="8dp" />
+        android:padding="12dp"
+        android:background="?attr/color_main2_000" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="?attr/color_background_contrast_in_dark_mode"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:elevation="4dp">
 
         <EditText
             android:id="@+id/input_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/shape_squircle_main2_100_background"
             android:hint="@string/alea_chat_message_hint"
             android:inputType="textCapSentences|textMultiLine"
-            android:maxLines="4" />
+            android:maxLines="4"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="10dp"
+            android:textColor="?attr/color_main2_700"
+            android:textColorHint="?attr/color_main2_400"
+            android:textSize="15sp" />
 
         <ImageButton
             android:id="@+id/btn_send"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginStart="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/alea_chat_send"
-            android:src="@drawable/paper_plane_right" />
+            android:src="@drawable/paper_plane_right"
+            app:tint="?attr/color_main1_500" />
     </LinearLayout>
 </LinearLayout>

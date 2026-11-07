@@ -88,7 +88,6 @@ object AleaSipAccountInstaller {
             ?: return Outcome.Error("Server SIP non valido: $serverUri")
         server.transport = transport
 
-        // Sostituisci TUTTI gli AuthInfo di questo username (realm/domain possono variare).
         for (old in core.authInfoList.toList()) {
             if (old.username.equals(user, ignoreCase = true)) {
                 core.removeAuthInfo(old)

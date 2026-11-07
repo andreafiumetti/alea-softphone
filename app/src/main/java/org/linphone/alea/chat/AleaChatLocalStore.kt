@@ -36,8 +36,11 @@ object AleaChatLocalStore {
     fun appendCachedMessage(context: Context, groupId: String, message: AleaChatClient.Message) {
         val existing = cachedMessages(context, groupId)
         val arr = try {
-            if (existing != null) org.json.JSONArray(JSONObject(existing).optJSONArray("messages") ?: org.json.JSONArray())
-            else org.json.JSONArray()
+            if (existing != null) {
+                org.json.JSONArray(JSONObject(existing).optJSONArray("messages") ?: org.json.JSONArray())
+            } else {
+                org.json.JSONArray()
+            }
         } catch (_: Exception) {
             org.json.JSONArray()
         }

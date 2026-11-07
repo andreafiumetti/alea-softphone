@@ -72,6 +72,34 @@
         app:launchSingleTop="true"/>
 
     <fragment
+        android:id="@+id/aleaChatThreadFragment"
+        android:name="org.linphone.alea.chat.AleaChatThreadFragment"
+        android:label="AleaChatThreadFragment"
+        tools:layout="@layout/alea_chat_thread_fragment">
+        <argument
+            android:name="groupId"
+            app:argType="string" />
+        <argument
+            android:name="groupName"
+            app:argType="string"
+            android:defaultValue="" />
+        <action
+            android:id="@+id/action_aleaChatThreadFragment_to_emptyFragment"
+            app:destination="@id/emptyFragment"
+            app:popUpTo="@id/aleaChatThreadFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_aleaChatThreadFragment"
+        app:destination="@id/aleaChatThreadFragment"
+        app:launchSingleTop="true"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"/>
+
+    <fragment
         android:id="@+id/conversationInfoFragment"
         android:name="org.linphone.ui.main.chat.fragment.ConversationInfoFragment"
         android:label="ConversationInfoFragment"

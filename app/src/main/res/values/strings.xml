@@ -11,8 +11,8 @@
     <!-- Not translatable strings -->
     <string name="vertical_separator" translatable="false">|</string>
 
-    <string name="assistant_web_platform_link" translatable="false">aleaconnect.it</string>
-    <string name="assistant_linphone_contact_us_link" translatable="false">aleaconnect.it</string>
+    <string name="assistant_web_platform_link" translatable="false">www.aleaconnect.it</string>
+    <string name="assistant_linphone_contact_us_link" translatable="false">www.aleaconnect.it</string>
 
     <string name="notification_channel_call_id" translatable="false">alea_softphone_notification_call_id</string>
     <string name="notification_channel_incoming_call_id" translatable="false">alea_softphone_notification_incoming_call_id</string>
@@ -58,17 +58,17 @@
     <string name="help_about_source_code_subtitle" translatable="false">ALEA Softphone GPLv3 sources (GitHub)</string>
     <string name="help_advanced_send_debug_logs_email_address" translatable="false">support@aleaconnect.it</string>
 
-    <string name="website_contact_url" translatable="false">https://aleaconnect.it</string>
+    <string name="website_contact_url" translatable="false">https://www.aleaconnect.it/</string>
     <string name="website_download_url" translatable="false">https://www.aleaconnect.it/alea-pbx/</string>
     <string name="website_user_guide_url" translatable="false">https://www.aleaconnect.it/alea-pbx/</string>
     <string name="website_privacy_policy_url" translatable="false">https://www.aleaconnect.it/alea-pbx/privacy-softphone.php</string>
-    <string name="website_terms_and_conditions_url" translatable="false">https://www.aleaconnect.it/alea-pbx/privacy-softphone.php</string>
-    <string name="web_platform_register_email_url" translatable="false">https://aleaconnect.it</string>
-    <string name="web_platform_forgotten_password_url" translatable="false">https://aleaconnect.it</string>
-    <string name="website_translate_weblate_url" translatable="false">https://aleaconnect.it</string>
+    <string name="website_terms_and_conditions_url" translatable="false">https://www.aleaconnect.it/alea-pbx/terms-softphone.php</string>
+    <string name="web_platform_register_email_url" translatable="false">https://www.aleaconnect.it/</string>
+    <string name="web_platform_forgotten_password_url" translatable="false">https://www.aleaconnect.it/</string>
+    <string name="website_translate_weblate_url" translatable="false">https://www.aleaconnect.it/</string>
     <string name="website_open_source_licences_usage_url" translatable="false">https://github.com/andreafiumetti/alea-softphone</string>
     <string name="website_source_code_url" translatable="false">https://github.com/andreafiumetti/alea-softphone</string>
-    <string name="conversation_end_to_end_encrypted_bottom_sheet_link" translatable="false"><u>https://aleaconnect.it</u></string>
+    <string name="conversation_end_to_end_encrypted_bottom_sheet_link" translatable="false"><u>https://www.aleaconnect.it/</u></string>
 
     <string name="conversation_one_to_one_hidden_subject" translatable="false">Dummy subject</string>
 

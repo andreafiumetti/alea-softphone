@@ -168,6 +168,12 @@
             android:resizeableActivity="true" />
 
         <activity
+            android:name=".alea.chat.AleaChatActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false"
+            android:resizeableActivity="true" />
+
+        <activity
             android:name=".ui.call.CallActivity"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.LinphoneInCall"

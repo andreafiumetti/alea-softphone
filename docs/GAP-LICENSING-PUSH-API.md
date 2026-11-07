@@ -10,8 +10,8 @@ Documento separato dalla prova tecnica audio. PBX invariato in questa fase.
 | linphone-sdk-android 5.5.19 | Verificare README/LICENSE SDK e dipendenze native (codec, ecc.) nella revisione usata |
 | Dipendenze app (Firebase, Coil, AppAuth, …) | Audit per distribuzione store / rivendita |
 
-**Non conclusivo per store closed-source** senza scelta del titolare (open compliance vs commerciale Belledonne).  
-Rivendita ≠ automatico closed source. Nessun acquisto autorizzato da questa nota.
+**Decisione 2026-11:** percorso **GPLv3** (vedi `softphone-v2/BELLEDONNE-COMPLIANCE.md` e `NOTICE`).  
+Licenza proprietaria Belledonne **non** richiesta. Store ok solo con attribution + sorgenti disponibili agli utenti.
 
 ## 2. Push / raggiungibilità background
 

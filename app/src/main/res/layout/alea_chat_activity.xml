@@ -3,4 +3,4 @@
     android:id="@+id/alea_chat_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/alea_launcher_bg" />
+    android:background="?attr/color_background_contrast_in_dark_mode" />

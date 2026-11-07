@@ -237,6 +237,10 @@ class ConversationsListFragment : AbstractMainFragment() {
 
         listViewModel.conversations.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+            updateEmptyConversationsOverlay(
+                aleaEnrolled = org.linphone.alea.AleaEnrollStore.hasSession(requireContext()),
+                hasAleaGroups = aleaGroups.isNotEmpty()
+            )
 
             // Wait for adapter to have items before setting it in the RecyclerView,
             // otherwise scroll position isn't retained
@@ -500,18 +504,19 @@ class ConversationsListFragment : AbstractMainFragment() {
 
         if (!org.linphone.alea.AleaEnrollStore.hasSession(requireContext())) {
             section.visibility = View.GONE
+            updateEmptyConversationsOverlay(aleaEnrolled = false, hasAleaGroups = false)
             return
         }
         section.visibility = View.VISIBLE
+        // Empty SIP illustration is drawn above the panel and would hide Gruppi.
+        updateEmptyConversationsOverlay(aleaEnrolled = true, hasAleaGroups = aleaGroups.isNotEmpty())
         createBtn?.setOnClickListener {
             org.linphone.alea.chat.AleaChatActivity.openCreate(requireContext())
         }
         if (aleaGroupsAdapter == null) {
             aleaGroupsAdapter = AleaGroupsInlineAdapter(
                 aleaGroups,
-                onOpen = { g ->
-                    org.linphone.alea.chat.AleaChatActivity.openThread(requireContext(), g.id, g.name)
-                },
+                onOpen = { g -> openAleaGroupThread(g.id, g.name) },
                 onDelete = { g -> confirmDeleteAleaGroup(g) }
             )
             list.layoutManager = LinearLayoutManager(requireContext())
@@ -521,15 +526,30 @@ class ConversationsListFragment : AbstractMainFragment() {
         refreshAleaGroups()
     }
 
+    private fun updateEmptyConversationsOverlay(aleaEnrolled: Boolean, hasAleaGroups: Boolean) {
+        val emptyGroup = binding.root.findViewById<androidx.constraintlayout.widget.Group>(
+            R.id.empty_conversations_group
+        ) ?: return
+        val sipEmpty = listViewModel.conversations.value.isNullOrEmpty()
+        // When enrolled, keep Gruppi visible: never cover the chat panel with the empty illu.
+        emptyGroup.visibility = if (aleaEnrolled || hasAleaGroups || !sipEmpty) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+    }
+
     private fun refreshAleaGroups() {
         val section = binding.root.findViewById<View>(R.id.alea_groups_section) ?: return
         val empty = binding.root.findViewById<android.widget.TextView>(R.id.alea_groups_empty)
         val session = org.linphone.alea.AleaEnrollStore.currentSession(requireContext())
         if (session == null) {
             section.visibility = View.GONE
+            updateEmptyConversationsOverlay(aleaEnrolled = false, hasAleaGroups = false)
             return
         }
         section.visibility = View.VISIBLE
+        updateEmptyConversationsOverlay(aleaEnrolled = true, hasAleaGroups = aleaGroups.isNotEmpty())
         kotlin.concurrent.thread(name = "alea-groups-inline", isDaemon = true) {
             try {
                 val groups = org.linphone.alea.chat.AleaChatClient.listGroups(session.apiBase, session.appToken)
@@ -539,11 +559,30 @@ class ConversationsListFragment : AbstractMainFragment() {
                     aleaGroups.addAll(groups)
                     aleaGroupsAdapter?.notifyDataSetChanged()
                     empty?.visibility = if (groups.isEmpty()) View.VISIBLE else View.GONE
+                    updateEmptyConversationsOverlay(aleaEnrolled = true, hasAleaGroups = groups.isNotEmpty())
                 }
             } catch (e: Exception) {
                 Log.w("$TAG ALEA groups refresh failed: ${e.message}")
+                activity?.runOnUiThread {
+                    if (!isAdded) return@runOnUiThread
+                    empty?.visibility = View.VISIBLE
+                    empty?.text = e.message ?: getString(R.string.alea_chat_groups_empty)
+                }
             }
         }
+    }
+
+    private fun openAleaGroupThread(groupId: String, groupName: String) {
+        Log.i("$TAG Opening ALEA group [$groupName] ($groupId) in sliding pane")
+        val args = Bundle().apply {
+            putString("groupId", groupId)
+            putString("groupName", groupName)
+        }
+        binding.chatNavContainer.findNavController().navigate(
+            R.id.action_global_aleaChatThreadFragment,
+            args
+        )
+        sharedViewModel.openSlidingPaneEvent.value = Event(true)
     }
 
     private fun confirmDeleteAleaGroup(group: org.linphone.alea.chat.AleaChatClient.Group) {

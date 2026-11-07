@@ -435,7 +435,14 @@ class ConversationsListViewModel
         chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
         val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
-        if (account.params.instantMessagingEncryptionMandatory && sameDomain) {
+        val aleaEnrolled = org.linphone.alea.AleaEnrollStore.hasSession(
+            org.linphone.LinphoneApplication.coreContext.context
+        )
+        if (aleaEnrolled) {
+            Log.i("$TAG ALEA enrolled — creating SIP MESSAGE Basic conversation")
+            chatParams.backend = ChatRoom.Backend.Basic
+            params.securityLevel = Conference.SecurityLevel.None
+        } else if (account.params.instantMessagingEncryptionMandatory && sameDomain) {
             Log.i("$TAG Account is in secure mode & domain matches, creating an E2E encrypted conversation")
             chatParams.backend = ChatRoom.Backend.FlexisipChat
             params.securityLevel = Conference.SecurityLevel.EndToEnd

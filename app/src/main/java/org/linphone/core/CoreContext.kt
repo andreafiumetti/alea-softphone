@@ -806,9 +806,10 @@ class CoreContext
                 }
             }
 
-            if (core.logCollectionUploadServerUrl.isNullOrEmpty()) {
-                Log.w("$TAG Logs sharing server URL not set, fixing that")
-                core.logCollectionUploadServerUrl = "https://files.linphone.org/http-file-transfer-server/hft.php"
+            // ALEA / Belledonne policy: do not wire Linphone cloud file-transfer for a rebranded fork.
+            if (core.logCollectionUploadServerUrl?.contains("linphone.org") == true) {
+                Log.w("$TAG Clearing Linphone log upload URL")
+                core.logCollectionUploadServerUrl = ""
             }
 
             corePreferences.linphoneConfigurationVersion = currentVersion
@@ -1364,15 +1365,15 @@ class CoreContext
         Log.i("$TAG Enabling hiding empty chat rooms")
         core.config.setBool("misc", "hide_empty_chat_rooms", true)
 
-        // Replace old URLs by new ones
-        if (corePreferences.checkForUpdateServerUrl == "https://www.linphone.org/releases") {
-            corePreferences.checkForUpdateServerUrl = "https://download.linphone.org/releases"
+        // ALEA / Belledonne policy: strip Linphone.org cloud endpoints (not our SIP service).
+        if (corePreferences.checkForUpdateServerUrl.contains("linphone.org")) {
+            corePreferences.checkForUpdateServerUrl = ""
         }
-        if (core.fileTransferServer == "https://www.linphone.org:444/lft.php") {
-            core.fileTransferServer = "https://files.linphone.org/http-file-transfer-server/hft.php"
+        if (core.fileTransferServer?.contains("linphone.org") == true) {
+            core.fileTransferServer = ""
         }
-        if (core.logCollectionUploadServerUrl == "https://www.linphone.org:444/lft.php") {
-            core.logCollectionUploadServerUrl = "https://files.linphone.org/http-file-transfer-server/hft.php"
+        if (core.logCollectionUploadServerUrl?.contains("linphone.org") == true) {
+            core.logCollectionUploadServerUrl = ""
         }
 
         Log.i("$TAG IMDN threshold set to 1 (meaning only sender will receive delivery & read notifications)")

@@ -107,8 +107,8 @@ android {
         applicationId = packageName
         minSdk = 28
         targetSdk = 37
-        versionCode = 603007 // 6.03.007 — groups section in Conversations + delete
-        versionName = "6.3.7-alea"
+        versionCode = 603010 // 6.03.010 — store prep: FCM register + www.aleaconnect.it
+        versionName = "6.3.10-alea"
 
         manifestPlaceholders["appAuthRedirectScheme"] = packageName
 

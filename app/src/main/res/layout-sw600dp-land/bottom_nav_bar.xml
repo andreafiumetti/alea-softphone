@@ -119,27 +119,6 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
             android:id="@+id/meetings"
-            android:onClick="@{() -> viewModel.navigateToMeetings()}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:layout_marginTop="16dp"
-            android:textColor="?attr/color_on_main"
-            android:drawableTop="@drawable/numpad"
-            android:drawablePadding="6dp"
-            android:drawableTint="?attr/color_on_main"
-            android:background="@drawable/squircle_transparent_button_background_2"
-            android:text="@string/bottom_navigation_dialpad_label"
-            textFont="@{viewModel.dialpadSelected ? NotoSansFont.NotoSansBold : NotoSansFont.NotoSansRegular}"
-            app:layout_constraintBottom_toTopOf="@id/meetings"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/conversations" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/bottom_nav_bar_label_style"
-            android:id="@+id/meetings"
             android:onClick="@{() -> viewModel.navigateToVoicemail()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

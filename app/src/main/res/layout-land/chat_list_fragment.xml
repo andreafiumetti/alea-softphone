@@ -30,6 +30,7 @@
                 android:layout_height="match_parent">
 
                 <androidx.constraintlayout.widget.Group
+                    android:id="@+id/empty_conversations_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:constraint_referenced_ids="no_conversation_image, no_conversation_label"

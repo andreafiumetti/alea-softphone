@@ -50,18 +50,27 @@ class AleaChatActivity : AppCompatActivity() {
         const val EXTRA_GROUP_NAME = "group_name"
         const val EXTRA_CREATE = "create"
 
+        private fun launch(ctx: Context, intent: Intent) {
+            if (ctx !is android.app.Activity) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            ctx.startActivity(intent)
+        }
+
         fun openGroups(ctx: Context) {
-            ctx.startActivity(Intent(ctx, AleaChatActivity::class.java))
+            launch(ctx, Intent(ctx, AleaChatActivity::class.java))
         }
 
         fun openCreate(ctx: Context) {
-            ctx.startActivity(
+            launch(
+                ctx,
                 Intent(ctx, AleaChatActivity::class.java).putExtra(EXTRA_CREATE, true)
             )
         }
 
         fun openThread(ctx: Context, groupId: String, name: String) {
-            ctx.startActivity(
+            launch(
+                ctx,
                 Intent(ctx, AleaChatActivity::class.java)
                     .putExtra(EXTRA_GROUP_ID, groupId)
                     .putExtra(EXTRA_GROUP_NAME, name)

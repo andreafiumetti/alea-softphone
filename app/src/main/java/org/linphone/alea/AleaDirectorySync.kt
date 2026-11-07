@@ -7,6 +7,7 @@ import org.linphone.core.Friend
 import org.linphone.core.FriendList
 import org.linphone.core.tools.Log
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.thread
 
 /**
@@ -17,6 +18,9 @@ object AleaDirectorySync {
     private const val TAG = "[ALEA Directory Sync]"
     const val FRIEND_LIST_NAME = "ALEA directory"
     private val running = AtomicBoolean(false)
+    private val lastError = AtomicReference<String?>(null)
+
+    fun lastErrorMessage(): String? = lastError.get()
 
     fun syncIfNeeded(context: Context) {
         if (!AleaEnrollStore.hasSession(context)) {
@@ -33,6 +37,7 @@ object AleaDirectorySync {
         val sipHost = AleaEnrollStore.sipHost(appCtx)
         thread(name = "alea-directory-sync", isDaemon = true) {
             try {
+                lastError.set(null)
                 val entries = AleaDirectoryClient.fetch(apiBase, token)
                 if (!coreContext.isReady()) {
                     Log.w("$TAG Core not ready, abort apply")
@@ -47,6 +52,7 @@ object AleaDirectorySync {
                 }
             } catch (e: Exception) {
                 Log.e("$TAG Sync failed: $e")
+                lastError.set(e.message ?: e.toString())
             } finally {
                 running.set(false)
             }
