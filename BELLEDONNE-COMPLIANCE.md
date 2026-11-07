@@ -48,7 +48,7 @@ In-app: Help → sorgenti / privacy. Offerta scritta: `support@aleaconnect.it` (
 - [x] NOTICE + Help attribution
 - [x] Privacy + termini su www.aleaconnect.it
 - [x] Default `sip.linphone.org` rimosso
-- [ ] Tag GitHub = binario store corrente (`v6.3.10-alea` target)
+- [x] Tag GitHub = binario store corrente (`v6.3.10-alea`)
 - [ ] Audit LICENSE SDK linphone-sdk revisione usata
 
 ### B. Marchio
@@ -69,7 +69,7 @@ In-app: Help → sorgenti / privacy. Offerta scritta: `support@aleaconnect.it` (
 - [ ] Play Console listing + Data safety (bozza in `STORE-LISTING.md`)
 - [x] Keystore release ALEA generato (`alea-release.keystore`, vault personale)
 - [ ] `google-services.json` Firebase **ALEA** + `ALEA_FCM_SERVER_KEY` su PBX — vedi `docs/FIREBASE-FCM-SETUP.md`
-- [ ] AAB `bundleRelease` caricato
+- [x] AAB `bundleRelease` firmato (locale `softphone-v2/store-artifacts/6.3.10-alea/`) — upload Play Console ancora da fare
 
 ## 5. Cosa NON fare
 
@@ -80,8 +80,12 @@ In-app: Help → sorgenti / privacy. Offerta scritta: `support@aleaconnect.it` (
 
 ## 6. Ordine operativo rimanente
 
-1. Firebase FCM ALEA → `google-services.json` + env PBX  
-2. `gradlew bundleRelease` → Play Console internal testing  
-3. Tag `v6.3.10-alea` su alea-softphone (+ iOS se allineato)  
-4. TestFlight / App Store unlisted iOS  
-5. Collaudo kill: chiamata + chat push  
+1. Firebase FCM ALEA → `google-services.json` + `ALEA_FCM_SERVER_KEY` su PBX (SHA-1 release sotto)  
+2. Play Console → internal testing → carica AAB `alea-softphone-6.3.10-alea.aab`  
+3. TestFlight / App Store unlisted iOS  
+4. Collaudo kill: chiamata + chat push  
+
+### Fingerprint keystore release (Firebase / Play App signing)
+
+- SHA-1: `65:98:13:75:3F:E8:C3:E9:A6:8C:1D:9F:A6:1C:DC:2B:74:1E:6C:5B`
+- SHA-256: `38:0B:8E:0B:77:C5:FB:83:A4:A7:45:45:62:85:74:29:39:10:3E:1B:28:DE:3A:23:2F:35:73:3E:82:34:96:72`  

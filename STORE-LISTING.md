@@ -78,7 +78,8 @@ Niente vendita dati. Nessun advertising ID richiesto.
 
 ## Pre-upload
 
-1. AAB firmato release (`alea-release.keystore`)
-2. `google-services.json` Firebase progetto **ALEA** + `ALEA_FCM_SERVER_KEY` su ogni PBX
-3. Tag GitHub `vX.Y.Z-alea` = binario caricato
-4. Privacy + termini live su www.aleaconnect.it
+1. [x] AAB firmato release — `softphone-v2/store-artifacts/6.3.10-alea/alea-softphone-6.3.10-alea.aab` (versionCode `603010`)
+2. [ ] `google-services.json` Firebase progetto **ALEA** + `ALEA_FCM_SERVER_KEY` su ogni PBX
+3. [x] Tag GitHub `v6.3.10-alea` = sorgente di questo binario
+4. [x] Privacy + termini live su www.aleaconnect.it
+5. [ ] Upload AAB in Play Console (internal testing) + listing da questo file

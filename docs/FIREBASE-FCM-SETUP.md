@@ -15,6 +15,11 @@ Senza questo, Android non riceve push con app in background/killed.
 
 ## 2. SHA-1 release (Play)
 
+Fingerprint già estratti dal keystore / AAB `6.3.10-alea`:
+
+- SHA-1: `65:98:13:75:3F:E8:C3:E9:A6:8C:1D:9F:A6:1C:DC:2B:74:1E:6C:5B`
+- SHA-256: `38:0B:8E:0B:77:C5:FB:83:A4:A7:45:45:62:85:74:29:39:10:3E:1B:28:DE:3A:23:2F:35:73:3E:82:34:96:72`
+
 ```bat
 keytool -list -v -keystore softphone-v2\android\app\alea-release.keystore -alias alea
 ```

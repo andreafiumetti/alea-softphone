@@ -144,7 +144,8 @@ class ConversationsListFragment : AbstractMainFragment() {
         binding.viewModel = listViewModel
         observeToastEvents(listViewModel)
 
-        binding.conversationsList.setHasFixedSize(true)
+        // Nested under a weighted LinearLayout: setHasFixedSize(true) trips lintVital
+        // InvalidSetHasFixedSize when siblings use wrap_content.
         binding.conversationsList.layoutManager = LinearLayoutManager(requireContext())
         binding.conversationsList.outlineProvider = outlineProvider
         binding.conversationsList.clipToOutline = true
